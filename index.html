@@ -117,7 +117,7 @@
 
       /* ── Main layout ─────────────────────────────────────────── */
       main {
-        display: none;/*flex*/
+        display: none; /*flex*/
         flex: 1;
       }
 
@@ -281,23 +281,23 @@
         min-width: 20%;
         background: #11111b;
       }
-      .hero{
-        opacity: .1;
+      .hero {
+        opacity: 0.1;
       }
-      .himo{
+      .himo {
         position: fixed;
-        width:100vw;
-        height:100vh;
-        border:2px solid rgba(255, 255, 255, 0.452);
-        margin:0;
-        padding:0;
+        width: 100vw;
+        height: 100vh;
+        border: 2px solid rgba(255, 255, 255, 0.452);
+        margin: 0;
+        padding: 0;
         background-color: #6a8051;
         display: flex;
         justify-content: center;
         align-items: center;
       }
 
-      .controls{
+      .controls {
         background-color: unset;
         color: unset;
         font-size: 1rem;
@@ -306,66 +306,333 @@
         font-size: 1.4rem;
         border-radius: 6px;
       }
-      div.controls{
+      div.controls {
         z-index: 9999;
-        padding: 1.6rem .2rem;
-        margin: .3rem;
-        width:300px;
+        padding: 1.6rem 0.2rem;
+        margin: 0.3rem;
+        width: 300px;
         height: 250px;
         background-color: #45475a;
         display: flex;
         flex-direction: column;
         align-items: center;
       }
-      input.controls{
+      input.controls {
         padding: unset;
         outline: unset;
         padding-top: 1rem;
         padding-bottom: 1rem;
         border: unset;
-        min-width:50%;
-        min-height:25%;
-        margin-bottom: .5rem;
+        min-width: 50%;
+        min-height: 25%;
+        margin-bottom: 0.5rem;
         text-indent: 2rem;
-         border: 2px solid #9ba2cc;
+        border: 2px solid #9ba2cc;
       }
-      input.controls::placeholder{
-        color: #9ba2ccb2;/*#c3c9718f*/
+      input.controls::placeholder {
+        color: #9ba2ccb2; /*#c3c9718f*/
       }
-     
-      button.controls{
-       
+
+      button.controls {
         color: #98a0cc;
         text-shadow: 1px 1px 1px #11111b;
         padding: unset;
         overflow: unset;
         border: unset;
-         border: 2px solid #9ba2cc;
+        border: 2px solid #9ba2cc;
         text-align: center;
-        min-width:266px;
+        min-width: 266px;
         max-width: 266px;
-        width:240px;
+        width: 240px;
         font-size: 50px;
-        margin-top: .5rem;
+        margin-top: 0.5rem;
       }
-      button.controls:hover{
+      button.controls:hover {
         cursor: pointer;
+      }
+      @media (max-width: 767px) {
+        * {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        header {
+          background: var(--bg-header);
+          padding: 9px 1px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid var(--border);
+          flex-shrink: 0;
+          gap: 2px;
+          flex-wrap: wrap;
+        }
+
+        header h1 {
+          font-size: 0.5rem;
+          font-weight: 700;
+          color: var(--tok-keyword);
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          flex-wrap: wrap;
+        }
+
+        button {
+          border: none;
+          border-radius: 6px;
+          padding: 0.1rem 0.3rem;
+          font-size: 0.5rem;
+          font-weight: 700;
+          cursor: pointer;
+
+          transition:
+            opacity 0.15s,
+            transform 0.1s;
+        }
+        button:hover {
+          opacity: 0.85;
+        }
+        button:active {
+          transform: scale(0.96);
+        }
+
+        #runBtn {
+          background: var(--tok-string);
+          color: #1e1e2e;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+        }
+
+        /* ── Main layout ─────────────────────────────────────────── */
+        main {
+          display: none; /*flex*/
+          flex: 1;
+        }
+
+        /* ── Editor pane ─────────────────────────────────────────── */
+        .editor-pane {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          border-right: 1px solid var(--border);
+        }
+
+        .pane-label {
+          background: var(--bg-header);
+          padding: 2px 4px;
+          font-size: 0.72rem;
+          color: var(--text-muted);
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+          border-bottom: 1px solid var(--border);
+          flex-shrink: 0;
+        }
+
+        .editor-wrapper {
+          flex: 1;
+          display: flex;
+          overflow: hidden;
+          position: relative;
+        }
+
+        #codeInput {
+          background: transparent;
+          color: transparent;
+          caret-color: var(--caret);
+          border: none;
+          outline: none;
+          resize: none;
+          white-space: pre-wrap;
+          word-break: break-word;
+          overflow: auto;
+          tab-size: 2;
+          z-index: 1;
+          display: flex;
+          justify-content: space-around;
+          justify-items: normal;
+          align-items: center;
+          align-content: center;
+        }
+
+        /* ── Syntax token colours (use CSS vars) ─────────────────── */
+        .tok-keyword {
+          color: var(--tok-keyword);
+          font-weight: bold;
+        }
+        .tok-builtin {
+          color: var(--tok-builtin);
+        }
+        .tok-string {
+          color: var(--tok-string);
+        }
+        .tok-template {
+          color: var(--tok-template);
+        }
+        .tok-number {
+          color: var(--tok-number);
+        }
+        .tok-comment {
+          color: var(--tok-comment);
+          font-style: italic;
+        }
+        .tok-regex {
+          color: var(--tok-regex);
+        }
+        .tok-operator {
+          color: var(--tok-operator);
+        }
+        .tok-punctuation {
+          color: var(--tok-punct);
+        }
+        .tok-identifier {
+          color: var(--tok-ident);
+        }
+        .tok-classname {
+          color: var(--tok-classname);
+          font-weight: bold;
+        }
+        .tok-article {
+          color: var(--tok-article);
+          font-weight: bold;
+        }
+        .tok-funcname {
+          color: var(--tok-funcname);
+        }
+        .tok-modelverb {
+          color: var(--tok-modelverb);
+        }
+        .tok-property {
+          color: var(--tok-property);
+        }
+        .tok-boolean {
+          color: var(--tok-boolean);
+          font-weight: bold;
+        }
+        .tok-null {
+          color: var(--tok-boolean);
+          font-weight: bold;
+        }
+        .header-actions{
+          width: 20rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .meet-google-files-link,#runBtn {
+          width:unset;
+          padding:unset;
+          margin:unset;
+          display: inline-block;
+          border-radius: 0px;
+          
+          font-size: 1.3rem;
+         
+          cursor: pointer;
+         
+          transition:
+            opacity 0.15s,
+            transform 0.1s;
+          color: white;
+          text-decoration: none;
+          text-align: center;
+          vertical-align:middle;
+          background: #11111b;
+          width: 100%;
+        }
+        .hero {
+          opacity: 0.1;
+        }
+        .himo {
+          width: 100%;
+          
+          border: 2px solid rgba(255, 255, 255, 0.452);
+          background-color: #6a8051;
+          display: flex;/* flex */
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        
+        }
+
+        .controls {
+          font-size: 0.4rem;
+          background-color: #6a8051;
+          color: #f1f087;
+          font-size: 1.5rem;
+          border-radius: 0px;
+        }
+        div.controls {
+          z-index: 9999;
+          background-color: #45475a;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 0 !important;
+          margin: 0 !important;
+
+        }
+        input.controls {
+          font-size: 2.4rem;
+          
+          padding-top: .4rem;
+          padding-bottom: .4rem;
+          border: unset;
+          min-width: 100%;
+          min-height: 33%;
+          margin-bottom: 0.8rem;
+          text-indent: 5.6rem;
+          border-bottom: 1px solid #9ba2cc0c;
+          border-top: 2px solid rgb(20, 19, 19);
+        }
+        input.controls::placeholder {
+          color: #9ba2ccb2; /*#c3c9718f*/
+        }
+
+        button.controls {
+          color: #98a0cc;
+          text-shadow: 1px 1px 1px #f7faf6;
+          text-indent: 2rem;
+          text-align: left;
+          font-size: 50px;
+          background-color: #686b5fe8;
+          border-bottom: 2px solid #0e0f0f;
+          border-top: 2px solid rgb(20, 19, 19);
+          min-width: 100%;
+          min-height: 33%;
+          margin-bottom: 0.8rem;
+          border-bottom: 1px solid #9ba2cc0c;
+          border-top: 2px solid rgb(20, 19, 19);
+        }
+        button.controls:hover {
+          cursor: pointer;
+        }
       }
     </style>
   </head>
   <body>
     <div class="himo" id="himo">
       <div class="controls">
-        <input class="controls"
-        id="loginputname" 
-        type="text" 
-        placeholder="TYPE YOUR NAME" />
-        <input 
-        id="loginputpass"
-        class="controls" 
-        type="password" 
-        name="pass" 
-        placeholder="TYPE PASSWORD" />
+        <input
+          class="controls"
+          id="loginputname"
+          type="text"
+          placeholder="TYPE YOUR NAME"
+        />
+        <input
+          id="loginputpass"
+          class="controls"
+          type="password"
+          name="pass"
+          placeholder="TYPE PASSWORD"
+        />
         <button class="controls" onclick="login()">Submit</button>
       </div>
     </div>
@@ -382,7 +649,7 @@
         </a>
       </div>
     </header>
-    
+
     <main id="main">
       <div class="editor-pane">
         <div class="pane-label">
@@ -398,25 +665,26 @@
             aria-label="JavaScript code editor"
           ></textarea>
         </div>
-        
+
         <img class="hero" src="ibrahim-knows-enough.jpg" alt="123" />
       </div>
     </main>
 
     <script>
       document.getElementById("runBtn").addEventListener("click", () => {
-        //alert("go to google meet link");
         window.parent.location.href = "https://meet.google.com/yqq-cdpj-iei";
       });
 
-      function login(){
-        let name='diva';
-        let pass='123';
-        if(document.getElementById("loginputname").value===name && document.getElementById("loginputpass").value ==="123"){
-          document.getElementById("himo").style.display="none";
-          document.getElementById("main").style.display="flex";
+      function login() {
+        let name = "diva";
+        let pass = "123";
+        if (
+          document.getElementById("loginputname").value === name &&
+          document.getElementById("loginputpass").value === "123"
+        ) {
+          document.getElementById("himo").style.display = "none";
+          document.getElementById("main").style.display = "flex";
         }
-
       }
     </script>
   </body>
