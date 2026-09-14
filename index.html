@@ -386,8 +386,6 @@
         button {
           border: none;
           border-radius: 6px;
-          padding: 0.1rem 0.3rem;
-          font-size: 0.5rem;
           font-weight: 700;
           cursor: pointer;
 
@@ -545,13 +543,15 @@
           text-align: center;
           vertical-align:middle;
           background: #11111b;
+         
           width: 100%;
+          background-color: #45475a;
         }
         .hero {
           opacity: 0.1;
         }
         .himo {
-          width: 100%;
+          width: fit-content;
           
           border: 2px solid rgba(255, 255, 255, 0.452);
           background-color: #6a8051;
@@ -559,6 +559,7 @@
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          border:2px solid green;
         
         }
 
@@ -566,50 +567,51 @@
           font-size: 0.4rem;
           background-color: #6a8051;
           color: #f1f087;
-          font-size: 1.5rem;
+          font-size: 1rem;
           border-radius: 0px;
         }
         div.controls {
+          width:280px;
           z-index: 9999;
-          background-color: #45475a;
+         
           display: flex;
           flex-direction: column;
+    
           align-items: center;
-          padding: 0 !important;
-          margin: 0 !important;
+          margin-right: 0 !important;
 
         }
         input.controls {
-          font-size: 2.4rem;
-          
-          padding-top: .4rem;
-          padding-bottom: .4rem;
+          font-size: 1.9rem;
           border: unset;
-          min-width: 100%;
+          width: 94%;
           min-height: 33%;
           margin-bottom: 0.8rem;
-          text-indent: 5.6rem;
-          border-bottom: 1px solid #9ba2cc0c;
-          border-top: 2px solid rgb(20, 19, 19);
+          text-indent: 1.8rem;
+          border-bottom: 1px solid #1e3a1cda;
+          border-top: 1px solid rgb(19, 46, 27);
+          background-color: #3042179a;
+        }
+         input.controls:focus {
+          border:1px solid yellowgreen;
         }
         input.controls::placeholder {
-          color: #9ba2ccb2; /*#c3c9718f*/
+          color: #5279639a; /*#c3c9718f*/
         }
 
         button.controls {
-          color: #98a0cc;
-          text-shadow: 1px 1px 1px #f7faf6;
-          text-indent: 2rem;
+          color: #473153;
+          text-shadow: 1px 1px 1px #dda6dd;
+          text-indent: 2.6rem;
           text-align: left;
           font-size: 50px;
-          background-color: #686b5fe8;
-          border-bottom: 2px solid #0e0f0f;
-          border-top: 2px solid rgb(20, 19, 19);
-          min-width: 100%;
+          background-color: #594f5ae8;
+          border-bottom: 13px solid #473153;
+          border-top: 2px solid #473153;
+          min-width: 97%;
           min-height: 33%;
+          margin: 0 !important;
           margin-bottom: 0.8rem;
-          border-bottom: 1px solid #9ba2cc0c;
-          border-top: 2px solid rgb(20, 19, 19);
         }
         button.controls:hover {
           cursor: pointer;
@@ -624,14 +626,14 @@
           class="controls"
           id="loginputname"
           type="text"
-          placeholder="TYPE YOUR NAME"
+          placeholder="YOUR NAME.."
         />
         <input
           id="loginputpass"
           class="controls"
           type="password"
           name="pass"
-          placeholder="TYPE PASSWORD"
+          placeholder="PASSWORD..."
         />
         <button class="controls" onclick="login()">Submit</button>
       </div>
@@ -666,12 +668,13 @@
           ></textarea>
         </div>
 
-        <img class="hero" src="ibrahim-knows-enough.jpg" alt="123" />
+        <img class="hero" src="./images/ibrahim-knows-enough.jpg" alt="123" />
       </div>
     </main>
 
     <script>
       document.getElementById("runBtn").addEventListener("click", () => {
+        //alert("go to google meet link");
         window.parent.location.href = "https://meet.google.com/yqq-cdpj-iei";
       });
 
