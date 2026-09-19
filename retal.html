@@ -685,12 +685,19 @@
         window.parent.location.href = "https://meet.google.com/yqq-cdpj-iei";
       });
 
-      function login() {
-        let name = "ibrahim" || "Ibrahim" || "Ibrahim Elsebaey";
-        let pass = "01274179870" || "01557389997";
+      
+        function login() {
+        const name = ["ibrahim", "Ibrahim"];
+        let pass = ["01274179870","01557389997"];
         if (
-          document.getElementById("loginputname").value === name &&
-          document.getElementById("loginputpass").value === pass
+          (document.getElementById("loginputname").value === name[0] &&
+          document.getElementById("loginputpass").value === pass[0]) ||
+           (document.getElementById("loginputname").value === name[0] &&
+          document.getElementById("loginputpass").value === pass[1] ) ||
+             (document.getElementById("loginputname").value === name[1] &&
+          document.getElementById("loginputpass").value === pass[0]) ||
+           (document.getElementById("loginputname").value === name[1] &&
+          document.getElementById("loginputpass").value === pass[1])
         ) {
           document.getElementById("himo").style.display = "none";
           document.getElementById("main").style.display = "flex";
