@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Sessions [ES]</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ── CSS custom-property theme tokens ───────────────────── */
+      :root {
+        --bg-body: #1e1e2e;
+        --bg-header: #181825;
+        --bg-output: #11111b;
+        --bg-lnums: #181825;
+        --border: #313244;
+        --text-main: #cdd6f4;
+        --text-muted: #6c7086;
+        --text-lnums: #45475a;
+        --caret: #cdd6f4;
+
+        /* syntax */
+        --tok-keyword: #cba6f7;
+        --tok-builtin: #89dceb;
+        --tok-string: #a6e3a1;
+        --tok-template: #a6e3a1;
+        --tok-number: #fab387;
+        --tok-comment: #6c7086;
+        --tok-regex: #f2cdcd;
+        --tok-operator: #89b4fa;
+        --tok-punct: #cdd6f4;
+        --tok-ident: #cdd6f4;
+        --tok-classname: #f9e2af;
+        --tok-funcname: #89b4fa;
+        --tok-property: #f2cdcd;
+        --tok-boolean: #fab387;
+        --tok-article: #6a8051;
+        --tok-modelverb: red;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: var(--bg-body);
+        color: var(--text-main);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        transition:
+          background 0.25s,
+          color 0.25s;
+        padding: 0;
+      }
+
+      /* ── Header ─────────────────────────────────────────────── */
+      header {
+        background: var(--bg-header);
+        padding: 9px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      header h1 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--tok-keyword);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        border: none;
+        border-radius: 6px;
+        padding: 0.1rem 3rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        cursor: pointer;
+        min-height: 5rem;
+        min-width: 19rem;
+        transition:
+          opacity 0.15s,
+          transform 0.1s;
+      }
+      button:hover {
+        opacity: 0.85;
+      }
+      button:active {
+        transform: scale(0.96);
+      }
+
+      #runBtn {
+        background: var(--tok-string);
+        color: #1e1e2e;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* ── Main layout ─────────────────────────────────────────── */
+      main {
+        display: none; /*flex*/
+        flex: 1;
+      }
+
+      /* ── Editor pane ─────────────────────────────────────────── */
+      .editor-pane {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--border);
+      }
+
+      .pane-label {
+        background: var(--bg-header);
+        padding: 5px 44px;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+
+      .editor-wrapper {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #highlight {
+        position: absolute;
+        top: 0;
+        left: 42px;
+        right: 0;
+        bottom: 0;
+        padding: 12px 14px;
+        font:
+          14px/1.6 "Cascadia Code",
+          "Fira Code",
+          "Consolas",
+          monospace;
+        font:
+          26px/2 "Cascadia Code",
+          "Fira Code",
+          "Consolas",
+          monospace;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow: auto;
+        pointer-events: none;
+        color: transparent;
+      }
+
+      #codeInput {
+        position: absolute;
+        top: 0;
+        left: 32px;
+        right: 0;
+        bottom: 0;
+        padding: 14px 24px;
+        font:
+          14px/1.6 "Cascadia Code",
+          "Fira Code",
+          "Consolas",
+          monospace;
+        font:
+          26px/2 "Cascadia Code",
+          "Fira Code",
+          "Consolas",
+          monospace;
+        background: transparent;
+        color: transparent;
+        caret-color: var(--caret);
+        border: none;
+        outline: none;
+        resize: none;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow: auto;
+        tab-size: 2;
+        z-index: 1;
+        display: flex;
+        justify-content: space-around;
+        justify-items: normal;
+        align-items: center;
+        align-content: center;
+      }
+
+      /* ── Syntax token colours (use CSS vars) ─────────────────── */
+      .tok-keyword {
+        color: var(--tok-keyword);
+        font-weight: bold;
+      }
+      .tok-builtin {
+        color: var(--tok-builtin);
+      }
+      .tok-string {
+        color: var(--tok-string);
+      }
+      .tok-template {
+        color: var(--tok-template);
+      }
+      .tok-number {
+        color: var(--tok-number);
+      }
+      .tok-comment {
+        color: var(--tok-comment);
+        font-style: italic;
+      }
+      .tok-regex {
+        color: var(--tok-regex);
+      }
+      .tok-operator {
+        color: var(--tok-operator);
+      }
+      .tok-punctuation {
+        color: var(--tok-punct);
+      }
+      .tok-identifier {
+        color: var(--tok-ident);
+      }
+      .tok-classname {
+        color: var(--tok-classname);
+        font-weight: bold;
+      }
+      .tok-article {
+        color: var(--tok-article);
+        font-weight: bold;
+      }
+      .tok-funcname {
+        color: var(--tok-funcname);
+      }
+      .tok-modelverb {
+        color: var(--tok-modelverb);
+      }
+      .tok-property {
+        color: var(--tok-property);
+      }
+      .tok-boolean {
+        color: var(--tok-boolean);
+        font-weight: bold;
+      }
+      .tok-null {
+        color: var(--tok-boolean);
+        font-weight: bold;
+      }
+      .meet-google-files-link {
+        border-radius: 6px;
+        padding: 0.1rem 3rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        cursor: pointer;
+        min-height: 5rem;
+        min-width: 19rem;
+        transition:
+          opacity 0.15s,
+          transform 0.1s;
+        color: white;
+        font-size: larger;
+        text-decoration: none;
+        min-width: 20%;
+        background: #11111b;
+      }
+      .hero {
+        opacity: 0.1;
+      }
+      .himo {
+        position: fixed;
+        width: 100vw;
+        height: 1000px;
+        border: 2px solid rgba(255, 255, 255, 0.452);
+        margin: 0;
+        padding: 0;
+        background-color:dimgrey;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .controls {
+        background-color: unset;
+        color: unset;
+        font-size: 1rem;
+        background-color: #6a8051;
+        color: #f1f087;
+        font-size: 1.4rem;
+        border-radius: 6px;
+      }
+      div.controls {
+        z-index: 9999;
+        padding: 1.6rem 0.2rem;
+        margin: 0.3rem;
+        width: 300px;
+        height: 250px;
+        background-color: #45475a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      input.controls {
+        padding: unset;
+        outline: unset;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        border: unset;
+        min-width: 50%;
+        min-height: 25%;
+        margin-bottom: 0.5rem;
+        text-indent: 2rem;
+        border: 2px solid #9ba2cc;
+      }
+      input.controls::placeholder {
+        color: #9ba2ccb2; /*#c3c9718f*/
+      }
+
+      button.controls {
+        color: #98a0cc;
+        text-shadow: 1px 1px 1px #11111b;
+        padding: unset;
+        overflow: unset;
+        border: unset;
+        border: 2px solid #9ba2cc;
+        text-align: center;
+        min-width: 266px;
+        max-width: 266px;
+        width: 240px;
+        font-size: 50px;
+        margin-top: 0.5rem;
+      }
+      button.controls:hover {
+        cursor: pointer;
+      }
+      @media (max-width: 767px) {/* -------------------------------------------------------------------------------*/
+        * {
+          margin: 0 ;
+          padding: 0 ;
+        }
+        header {
+          background: var(--bg-header);
+          padding: 9px 1px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid var(--border);
+          flex-shrink: 0;
+          gap: 2px;
+          flex-wrap: wrap;
+        }
+
+        header h1 {
+          font-size: 0.5rem;
+          font-weight: 700;
+          color: var(--tok-keyword);
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          flex-wrap: wrap;
+        }
+
+        button {
+          border: none;
+          border-radius: 6px;
+          font-weight: 700;
+          cursor: pointer;
+
+          transition:
+            opacity 0.15s,
+            transform 0.1s;
+        }
+        button:hover {
+          opacity: 0.85;
+        }
+        button:active {
+          transform: scale(0.96);
+        }
+
+        #runBtn {
+          background: var(--tok-string);
+          color: #1e1e2e;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+        }
+
+        /* ── Main layout ─────────────────────────────────────────── */
+        main {
+          display: none; /*flex*/
+          flex: 1;
+        }
+
+        /* ── Editor pane ─────────────────────────────────────────── */
+        .editor-pane {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          border-right: 1px solid var(--border);
+        }
+
+        .pane-label {
+          background: var(--bg-header);
+          padding: 2px 4px;
+          font-size: 0.72rem;
+          color: var(--text-muted);
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+          border-bottom: 1px solid var(--border);
+          flex-shrink: 0;
+        }
+
+        .editor-wrapper {
+          flex: 1;
+          display: flex;
+          overflow: hidden;
+          position: relative;
+        }
+
+        #codeInput {
+          background: transparent;
+          color: transparent;
+          caret-color: var(--caret);
+          border: none;
+          outline: none;
+          resize: none;
+          white-space: pre-wrap;
+          word-break: break-word;
+          overflow: auto;
+          tab-size: 2;
+          z-index: 1;
+          display: flex;
+          justify-content: space-around;
+          justify-items: normal;
+          align-items: center;
+          align-content: center;
+        }
+
+        /* ── Syntax token colours (use CSS vars) ─────────────────── */
+        .tok-keyword {
+          color: var(--tok-keyword);
+          font-weight: bold;
+        }
+        .tok-builtin {
+          color: var(--tok-builtin);
+        }
+        .tok-string {
+          color: var(--tok-string);
+        }
+        .tok-template {
+          color: var(--tok-template);
+        }
+        .tok-number {
+          color: var(--tok-number);
+        }
+        .tok-comment {
+          color: var(--tok-comment);
+          font-style: italic;
+        }
+        .tok-regex {
+          color: var(--tok-regex);
+        }
+        .tok-operator {
+          color: var(--tok-operator);
+        }
+        .tok-punctuation {
+          color: var(--tok-punct);
+        }
+        .tok-identifier {
+          color: var(--tok-ident);
+        }
+        .tok-classname {
+          color: var(--tok-classname);
+          font-weight: bold;
+        }
+        .tok-article {
+          color: var(--tok-article);
+          font-weight: bold;
+        }
+        .tok-funcname {
+          color: var(--tok-funcname);
+        }
+        .tok-modelverb {
+          color: var(--tok-modelverb);
+        }
+        .tok-property {
+          color: var(--tok-property);
+        }
+        .tok-boolean {
+          color: var(--tok-boolean);
+          font-weight: bold;
+        }
+        .tok-null {
+          color: var(--tok-boolean);
+          font-weight: bold;
+        }
+        .header-actions{
+          width: 370px !important;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .meet-google-files-link,#runBtn {
+          width:unset;
+          padding:3px 22px !important;
+          margin:unset;
+          display: inline-block;
+          border-radius: 0px;
+          font-size: 1.7rem;
+          cursor: pointer;
+          transition:
+            opacity 0.15s,
+            transform 0.1s;
+          color: white;
+          text-decoration: none;
+          text-align: center;
+          vertical-align:middle;
+         
+          width: 370px !important;
+          background-color: #45475a;
+        }
+        .hero {
+          opacity: 0.4;
+          width:300px !important;
+          height:370px !important;
+        }
+        .himo {
+          width: fit-content;
+             height: 780px;
+          background-color:dimgrey;
+          display: flex;/* flex */
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .controls {
+          font-size: 0.4rem;
+          background-color: dimgrey;
+          color: #f1f087;
+          font-size: 1rem;
+          border-radius: 0px;
+        }
+        div.controls {
+          width:370px;
+          z-index: 9999;
+         
+          display: flex;
+          flex-direction: column;
+    
+          align-items: center;
+          margin-right: 0 !important;
+
+        }
+        input.controls {
+          font-size: 1.9rem;
+          border: unset;
+          width: 94%;
+          min-height: 33%;
+          margin-bottom: 0.8rem;
+          text-indent: 1.8rem;
+          border-bottom: 1px solid #1e3a1cda;
+          border-top: 1px solid rgb(19, 46, 27);
+        }
+         input.controls:focus {
+          border:1px solid yellowgreen;
+        }
+        input.controls::placeholder {
+          color: #5279639a; /*#c3c9718f*/
+        }
+
+        button.controls {
+          color: #473153;
+          text-shadow: 1px 1px 1px #dda6dd;
+          text-indent: 2.6rem;
+          text-align: left;
+          font-size: 50px;
+          background-color: #594f5ae8;
+          border-bottom: 13px solid #473153;
+          border-top: 2px solid #473153;
+          min-width: 97%;
+          min-height: 33%;
+          margin: 0 !important;
+          margin-bottom: 0.8rem;
+        }
+        button.controls:hover {
+          cursor: pointer;
+        }
+      }
+      .editor-pane{
+        padding:auto;
+        margin:auto;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="himo" id="himo">
+      <div class="controls">
+        <input
+          class="controls"
+          id="loginputname"
+          type="text"
+          placeholder="YOUR NAME.."
+        />
+        <input
+          id="loginputpass"
+          class="controls"
+          type="password"
+          name="pass"
+          placeholder="PASSWORD..."
+        />
+        <button class="controls" onclick="login()">Submit</button>
+      </div>
+    </div>
+    <header>
+      <h1>⚡ Teaching Website</h1>
+      <div class="header-actions">
+        <button id="runBtn">▶ Go to meet</button>
+        <a
+          class="meet-google-files-link"
+          target="_blank"
+          href="https://drive.google.com/drive/folders/1COwshTGyhETKReqVqw2QhohWSg8j6dhC?usp=drive_link"
+        >
+          MEET GOOGLE CARDS...
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="editor-pane">
+        <div class="pane-label">
+          <pre>
+            
+          Mr. Ibrahim Elsebaey 
+          An online English language teacher
+            
+          </pre>
+        </div>
+        <div class="editor-wrapper">
+          <textarea
+            id="codeInput"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-label="JavaScript code editor"
+          ></textarea>
+        </div>
+
+        <img class="hero" src="ibrahim-knows-enough.jpg" alt="123" />
+      </div>
+    </main>
+
+    <script>
+      document.getElementById("runBtn").addEventListener("click", () => {
+        //alert("go to google meet link");
+        window.parent.location.href = "https://meet.google.com/yqq-cdpj-iei";
+      });
+
+      function login() {
+        let name = "diva";
+        let pass = "123";
+        if (
+          document.getElementById("loginputname").value === name &&
+          document.getElementById("loginputpass").value === "123"
+        ) {
+          document.getElementById("himo").style.display = "none";
+          document.getElementById("main").style.display = "flex";
+        }
+      }
+    </script>
+  </body>
+</html>
